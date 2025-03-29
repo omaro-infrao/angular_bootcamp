@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <body>
-        <div ng-app="myApp" ng-controller="myCtrl">
-            <h1 ng-click="changeName()">{{firstname}}</h1>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <body ng-app="todoApp">
+        <h1>MA TODO</h1>
+        <div ng-controller="inputCtrl">
+            <input ng-model="userInput">
         </div>
-
-        <script>
-            var app = angular.module('myApp', []);
-            app.controller('myCtrl', function($scope) {
-              $scope.firstname = "Omar";
-              $scope.changeName = function() {
-                $scope.firstname = "Abouslime";
-              }
-            });
-        </script>
+        <script src="app.js"></script>
     </body>
 </html>
