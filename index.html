@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
+    <head>
+    </head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <body ng-app="todoApp">
         <h1>MA TODO</h1>
         <div ng-controller="inputCtrl">
-            <input ng-model="userInput">
+            <form ng-submit="$event.preventDefault()">
+                <input ng-model="userInput" ng-style="inputStyle">
+                <button type="button" ng-click="handleSubmit()">Ajouter</button>
+            </form> 
+            <ul>
+                <li ng-repeat="todo in todolist track by $index">
+                    <input type="checkbox" ng-model="todo.completed" ng-change="saveTodos()">
+                    <span ng-style="{'text-decoration': todo.completed ? 'line-through' : 'none'}">{{todo.task}}</span>
+                    <button ng-click="deleteTodo(todo)">❌</button>
+                </li>
+            </ul>
+            <p>Tasks remaining : {{ leftTasks() }}</p>
+            <button ng-click="clearCompleted()" style="background-color: red;">Clear completed</button>
         </div>
         <script src="app.js"></script>
     </body>
