@@ -45,8 +45,23 @@
                     </button>
                 </div>
             </div>
-
-            
+            <!-- Panier -->
+            <div class="cart-section">
+                <h2>Panier ({{cart.length}})</h2>
+                <div class="cart-items">
+                    <div ng-repeat="item in cart track by $index" class="cart-item">
+                        <div class="cart-item-info">
+                            <span class="cart-item-name">{{item.name}}</span>
+                            <span class="cart-item-price">{{item.price | currency:"€"}}</span>
+                            <button ng-click="removeFromCart($index)" class="remove-button">❌</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cart-total" ng-if="cart.length > 0">
+                    Total: {{getTotal() | currency:"€"}}
+                    <button ng-click="clearCart()" class="clear-button">Vider le panier</button>
+                </div>
+            </div>
         </div>
         <script src="app.js"></script>
     </body>
