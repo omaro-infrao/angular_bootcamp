@@ -4,77 +4,49 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-    <body ng-app="contactApp">
-        <h1>GESTIONNAIRE DE CONTACT</h1>
-        <div ng-controller="inputCtrl">
-            <form>
-                <div class="form-group">
-                    <label>Prénom</label>
-                    <input ng-model="firstNameInput" placeholder="Jean">
-                </div>
-                
-                <div class="form-group">
-                    <label>Nom</label>
-                    <input ng-model="lastNameInput" placeholder="Dupont">
-                </div>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input ng-model="emailInput" placeholder="jeangangsta77@gmail.com">
-                </div>
-                
-                <div class="form-group">
-                    <label>Téléphone</label>
-                    <input ng-model="phoneInput" placeholder="0606060606">
-                </div> 
-                
-                <div class="form-actions">
-                    <button type="button" ng-click="handleSubmit()">✅ Ajouter</button>
-                </div>
-            </form>
-
-            <div class="search-container">
-                <input type="text" ng-model="searchInput" placeholder="Rechercher un contact" class="search-input">
-                <button ng-click="toggleSortDirection()" class="sort-button">
-                    Tri {{sortDirection ? '↓' : '↑'}}
-                </button>
+    <body ng-app="catalogApp">
+        <h1>CATALOGUE DE PRODUITS</h1>
+        <div ng-controller="mainCtrl">
+            <div class="select-container">
+                <select ng-model="selectedCategory">
+                    <option value="" ng-click="selectedCategory = ''">Tous les produits</option>
+                    <option ng-repeat="product in products | unique:'category'" value="{{product.category}}">
+                        {{product.category}}
+                    </option>
+                </select>
             </div>
-            
-            <div ng-repeat="contact in contacts | filter:searchInput | orderBy:'lastName':(sortDirection === true) track by contact.id" class="contact-item" ng-class="{'editing': contact.isEditing}">
-                <div class="contact-info">
-                    <span>Prénom {{ contact.firstName ? '' : '⚠️'}}</span>
-                    <span ng-if="!contact.isEditing">{{contact.firstName}}</span>
-                    <input ng-if="contact.isEditing" ng-model="contact.firstName">
-                </div>
+            <div class="products-container">
+                <div ng-repeat="product in products | filter: {category: selectedCategory} track by product.id" class="product-item">
+                    <div class="product-info">
+                        <span>Nom: </span>
+                        <span>{{ product.name }}</span>
+                        <span ng-if="!product.name" class="warning-icon">⚠️</span>
+                    </div>
 
-                <div class="contact-info">
-                    <span>Nom {{ contact.lastName ? '' : '⚠️'}}</span>
-                    <span ng-if="!contact.isEditing">{{contact.lastName}}</span>
-                    <input ng-if="contact.isEditing" ng-model="contact.lastName">
-                </div>
-                
-                <div class="contact-info">
-                    <span>Email {{ contact.email ? '' : '⚠️'}}</span>
-                    <span ng-if="!contact.isEditing">{{contact.email}}</span>
-                    <input ng-if="contact.isEditing" ng-model="contact.email">
-                </div>
-                
-                <div class="contact-info">
-                    <span>Téléphone {{ contact.phone ? '' : '⚠️'}}</span>
-                    <span ng-if="!contact.isEditing">{{contact.phone}}</span>
-                    <input ng-if="contact.isEditing" ng-model="contact.phone">
-                </div>
-
-                
-
-                <div class="contact-actions">
-                    <button ng-if="!contact.isEditing" type="button" ng-click="editContact(contact)">✏️ Modifier</button>
-                    <button ng-if="contact.isEditing" type="button" ng-click="saveEdit(contact)">💾 Sauvegarder</button>
+                    <div class="product-info">
+                        <span>Description: </span>
+                        <span>{{ product.description }}</span>
+                        <span ng-if="!product.description" class="warning-icon">⚠️</span>
+                    </div>
                     
-                    <button ng-if="!contact.isEditing" type="button" ng-click="deleteContact(contact)">❌ Supprimer</button>
-                    <button ng-if="contact.isEditing" type="button" ng-click="cancelEdit(contact)"> ⬅️ Annuler</button>
+                    <div class="product-info">
+                        <span>Prix: </span>
+                        <span>{{ product.price | currency:"€" }}</span>
+                        <span ng-if="!product.price" class="warning-icon">⚠️</span>
+                    </div>
+                    
+                    <div class="product-info">
+                        <span>Catégorie: </span>
+                        <span>{{ product.category }}</span>
+                        <span ng-if="!product.category" class="warning-icon">⚠️</span>
+                    </div>
+                    <button ng-click="addProduct(product)" class="add-button">
+                        <span class="button-icon">🛒</span> Ajouter un produit au panier
+                    </button>
                 </div>
             </div>
+
+            
         </div>
         <script src="app.js"></script>
     </body>

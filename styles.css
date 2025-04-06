@@ -12,23 +12,90 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    min-height: 100vh;
-    background: linear-gradient(-45deg, #a8e6ff, #ffffff, #87ceeb, #b0e2ff);
-    background-size: 400% 400%;
-    animation: gradientSky 15s ease infinite;
+    background-color: #f5f7fa;
 }
 
 h1 {
-    color: #2c3e50;
     text-align: center;
-    margin-bottom: 30px;
+    color: #2c3e50;
+    margin-bottom: 40px;
     font-size: 2.5em;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-item {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.product-info:last-child {
+    border-bottom: none;
+}
+
+.product-info span:first-child {
+    font-weight: bold;
+    color: #34495e;
+    min-width: 100px;
+}
+
+.product-info span:nth-child(2) {
+    color: #2c3e50;
+    flex: 1;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 20px auto;
+}
+
+button:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+/* Animation for new products */
+.product-item {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 form {
@@ -82,19 +149,6 @@ input:focus {
 
 input:hover {
     border-color: #bdc3c7;
-}
-
-button {
-    padding: 12px 24px;
-    margin: 5px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 14px;
 }
 
 .form-actions {
@@ -230,11 +284,80 @@ button[ng-click="cancelEdit"]:hover {
     border-color: #bdc3c7;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 .contact-item {
     animation: fadeIn 0.3s ease-out;
+}
+
+select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 16px;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+    padding-right: 40px;
+}
+
+select:hover {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+select option {
+    padding: 12px;
+    background-color: white;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+select option:hover {
+    background-color: #f5f7fa;
+}
+
+/* Style pour le conteneur du select */
+.select-container {
+    position: relative;
+    margin: 20px 0;
+}
+
+.select-container::after {
+    content: '';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #2c3e50;
+    pointer-events: none;
+}
+
+/* Animation pour le select */
+select {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Style pour le placeholder */
+select option[value=""] {
+    color: #95a5a6;
+    font-style: italic;
 } 
