@@ -7,6 +7,7 @@
     <body ng-app="catalogApp">
         <h1>CATALOGUE DE PRODUITS</h1>
         <div ng-controller="mainCtrl">
+            <!-- Sélection de la catégorie -->
             <div class="select-container">
                 <select ng-model="selectedCategory">
                     <option value="" ng-click="selectedCategory = ''">Tous les produits</option>
@@ -15,34 +16,53 @@
                     </option>
                 </select>
             </div>
-            <div class="products-container">
-                <div ng-repeat="product in products | filter: {category: selectedCategory} track by product.id" class="product-item">
-                    <div class="product-info">
-                        <span>Nom: </span>
-                        <span>{{ product.name }}</span>
-                        <span ng-if="!product.name" class="warning-icon">⚠️</span>
-                    </div>
 
-                    <div class="product-info">
-                        <span>Description: </span>
-                        <span>{{ product.description }}</span>
-                        <span ng-if="!product.description" class="warning-icon">⚠️</span>
+            <!-- Recherche par nom -->
+            <div class="search-container">
+                <input type="text" ng-model="searchInput" placeholder="Rechercher par nom" class="search-input">
+            </div>
+
+            <!-- Liste des produits -->
+            <div class="products-container">
+                <div class="product-list">
+                    <div class="sort-controls">
+                        <button ng-click="toggleSortDirection()" class="sort-button">
+                            Trier par prix {{sortDirection ? '↓' : '↑'}}
+                        </button>
                     </div>
-                    
-                    <div class="product-info">
-                        <span>Prix: </span>
-                        <span>{{ product.price | currency:"€" }}</span>
-                        <span ng-if="!product.price" class="warning-icon">⚠️</span>
+                    <div class="product-item" ng-repeat="product in products | filter: {category: selectedCategory} | filter: {name: searchInput} | orderBy: sortField:sortDirection">
+                        <div class="product-info-container">
+                            <div class="product-info">
+                                <span>Nom: </span>
+                                <span>{{ product.name }}</span>
+                                <span ng-if="!product.name" class="warning-icon">⚠️</span>
+                            </div>
+
+                            <div class="product-info">
+                                <span>Description: </span>
+                                <span>{{ product.description }}</span>
+                                <span ng-if="!product.description" class="warning-icon">⚠️</span>
+                            </div>
+                            
+                            <div class="product-info">
+                                <span>Prix: </span>
+                                <span>{{ product.price | currency:"€" }}</span>
+                                <span ng-if="!product.price" class="warning-icon">⚠️</span>
+                            </div>
+                            
+                            <div class="product-info">
+                                <span>Catégorie: </span>
+                                <span>{{ product.category }}</span>
+                                <span ng-if="!product.category" class="warning-icon">⚠️</span>
+                            </div>
+                            <button ng-click="addProduct(product)" class="add-button">
+                                <span class="button-icon">🛒</span> Ajouter un produit au panier
+                            </button>
+                        </div>
+                        <div class="product-image-container">
+                            <img ng-src="{{product.imageUrl}}" alt="{{product.name}}" class="product-image">
+                        </div>
                     </div>
-                    
-                    <div class="product-info">
-                        <span>Catégorie: </span>
-                        <span>{{ product.category }}</span>
-                        <span ng-if="!product.category" class="warning-icon">⚠️</span>
-                    </div>
-                    <button ng-click="addProduct(product)" class="add-button">
-                        <span class="button-icon">🛒</span> Ajouter un produit au panier
-                    </button>
                 </div>
             </div>
             <!-- Panier -->
