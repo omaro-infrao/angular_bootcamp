@@ -2,16 +2,20 @@
 <html>
     <head>
         <link rel="stylesheet" href="styles.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <script src="app.js"></script>
     </head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <body ng-app="catalogApp">
-        <h1>CATALOGUE DE PRODUITS</h1>
         <div ng-controller="mainCtrl">
+            <div class="settings-button" ng-click="accessAdmin()">
+                ⚙️
+            </div>
+            <h1>CATALOGUE DE PRODUITS</h1>
             <!-- Sélection de la catégorie -->
             <div class="select-container">
                 <select ng-model="selectedCategory">
                     <option value="" ng-click="selectedCategory = ''">Tous les produits</option>
-                    <option ng-repeat="product in products | unique:'category'" value="{{product.category}}">
+                    <option ng-repeat="product in products | unique:'category' track by product.category" value="{{product.category}}">
                         {{product.category}}
                     </option>
                 </select>
@@ -22,6 +26,42 @@
                 <input type="text" ng-model="searchInput" placeholder="Rechercher par nom" class="search-input">
             </div>
 
+            <div class="add-product-container" ng-if="admin">
+                <button ng-click="startAddingProduct()" class="add-button" ng-if="admin && !isAdding">
+                    <span class="button-icon">➕</span> Ajouter un produit
+                </button>
+                <div class="product-form" ng-if="admin && isAdding">
+                    <div class="product-info">
+                        <span>Nom<span style="color: red;">*</span> : </span>
+                        <input type="text" ng-model="newProduct.name">
+                    </div>
+                    <div class="product-info">
+                        <span>Description: </span>
+                        <input type="text" ng-model="newProduct.description">
+                    </div>
+                    <div class="product-info">
+                        <span>Prix<span style="color: red;">*</span> : </span>
+                        <input type="number" ng-model="newProduct.price">
+                    </div>
+                    <div class="product-info">
+                        <span>Catégorie<span style="color: red;">*</span> : </span>
+                        <input type="text" ng-model="newProduct.category">
+                    </div>
+                    <div class="product-info">
+                        <span>Image: </span>
+                        <input type="text" ng-model="newProduct.imageUrl">
+                    </div>
+                    <div class="edit-buttons-container">
+                        <button ng-click="addNewProduct()" class="save-button">
+                            <span class="button-icon">💾</span> Enregistrer
+                        </button>
+                        <button ng-click="cancelAddingProduct()" class="cancel-button">
+                            <span class="button-icon">❌</span> Annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Liste des produits -->
             <div class="products-container">
                 <div class="product-list">
@@ -30,34 +70,66 @@
                             Trier par prix {{sortDirection ? '↓' : '↑'}}
                         </button>
                     </div>
-                    <div class="product-item" ng-repeat="product in products | filter: {category: selectedCategory} | filter: {name: searchInput} | orderBy: sortField:sortDirection">
+                    <div class="product-item" ng-repeat="product in products | filter: {category: selectedCategory} | filter: {name: searchInput} | orderBy: sortField:sortDirection track by product.id">
                         <div class="product-info-container">
-                            <div class="product-info">
+                            
+                            <div class="product-info" ng-if="!product.isEditing">
                                 <span>Nom: </span>
                                 <span>{{ product.name }}</span>
                                 <span ng-if="!product.name" class="warning-icon">⚠️</span>
                             </div>
+                            <div class="product-info" ng-if="product.isEditing">
+                                <span>Nom: </span>
+                                <input type="text" ng-model="product.name">
+                            </div>
 
-                            <div class="product-info">
+                            <div class="product-info" ng-if="!product.isEditing">
                                 <span>Description: </span>
                                 <span>{{ product.description }}</span>
                                 <span ng-if="!product.description" class="warning-icon">⚠️</span>
                             </div>
+                            <div class="product-info" ng-if="product.isEditing">
+                                <span>Description: </span>
+                                <input type="text" ng-model="product.description">
+                            </div>
                             
-                            <div class="product-info">
+                            <div class="product-info" ng-if="!product.isEditing">
                                 <span>Prix: </span>
                                 <span>{{ product.price | currency:"€" }}</span>
                                 <span ng-if="!product.price" class="warning-icon">⚠️</span>
                             </div>
+                            <div class="product-info" ng-if="product.isEditing">
+                                <span>Prix: </span>
+                                <input type="number" ng-model="product.price">
+                            </div>
                             
-                            <div class="product-info">
+                            <div class="product-info" ng-if="!product.isEditing">
                                 <span>Catégorie: </span>
                                 <span>{{ product.category }}</span>
                                 <span ng-if="!product.category" class="warning-icon">⚠️</span>
                             </div>
+                            <div class="product-info" ng-if="product.isEditing">
+                                <span>Catégorie: </span>
+                                <input type="text" ng-model="product.category">
+                            </div>
+                            
                             <button ng-click="addProduct(product)" class="add-button">
                                 <span class="button-icon">🛒</span> Ajouter un produit au panier
                             </button>
+                            <div class="edit-buttons-container" ng-if="admin">
+                                <button ng-click="editProduct(product)" class="edit-button" ng-if="!product.isEditing">
+                                    <span class="button-icon">✏️</span> Modifier
+                                </button>
+                                <button ng-click="deleteProduct(product)" class="delete-button" ng-if="!product.isEditing">
+                                    <span class="button-icon">🗑️</span> Supprimer
+                                </button>
+                                <button ng-click="product.isEditing = false" class="save-button" ng-if="product.isEditing">
+                                    <span class="button-icon">💾</span> Enregistrer
+                                </button>
+                                <button ng-click="cancelEdit(product)" class="cancel-button" ng-if="product.isEditing">
+                                    <span class="button-icon">❌</span> Annuler
+                                </button>
+                            </div>
                         </div>
                         <div class="product-image-container">
                             <img ng-src="{{product.imageUrl}}" alt="{{product.name}}" class="product-image">
@@ -83,6 +155,5 @@
                 </div>
             </div>
         </div>
-        <script src="app.js"></script>
     </body>
 </html> 
